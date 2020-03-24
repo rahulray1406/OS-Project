@@ -65,7 +65,6 @@ void* ta_actions() {
 
 	while( 1 ) {
 
-		//if students are waiting
 		if ( number_students_waiting > 0 ) {
 
 			ta_sleeping_flag = 0;
@@ -74,7 +73,7 @@ void* ta_actions() {
 
 			int help_time = rand() % 5;
 
-			//TA helping student.
+			
 			printf( "Helping a student for %d seconds. Students waiting = %d.\n", help_time, (number_students_waiting - 1) );
 			printf( "Student %d receiving help.\n",waiting_room_chairs[next_teaching_position] );
 
@@ -88,7 +87,7 @@ void* ta_actions() {
 			sem_post( &sem_ta );
 
 		}
-		//if no students are waiting
+		
 		else {
 
 			if ( ta_sleeping_flag == 0 ) {
