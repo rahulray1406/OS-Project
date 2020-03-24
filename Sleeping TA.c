@@ -44,3 +44,10 @@ int main( int argc, char **argv ){
 
 	sem_init( &sem_students, 0, 0 );
 	sem_init( &sem_ta, 0, 1 );
+	pthread_mutex_init( &mutex_thread, NULL );
+	pthread_create( &ta, NULL, ta_actions, NULL );
+	for( i = 0; i < student_num; i++ )
+	{
+		student_ids[i] = i + 1;
+		pthread_create( &students[i], NULL, student_actions, (void*) &student_ids[i] );
+	}
