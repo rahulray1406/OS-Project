@@ -59,3 +59,47 @@ int main( int argc, char **argv ){
 
 	return 0;
 }
+void* ta_actions() {
+
+	printf( "Checking for students.\n" );
+
+	while( 1 ) {
+
+		//if students are waiting
+		if ( number_students_waiting > 0 ) {
+
+			ta_sleeping_flag = 0;
+			sem_wait( &sem_students );
+			pthread_mutex_lock( &mutex_thread );
+
+			int help_time = rand() % 5;
+
+			//TA helping student.
+			printf( "Helping a student for %d seconds. Students waiting = %d.\n", help_time, (number_students_waiting - 1) );
+			printf( "Student %d receiving help.\n",waiting_room_chairs[next_teaching_position] );
+
+			waiting_room_chairs[next_teaching_position]=0;
+			number_students_waiting--;
+			next_teaching_position = ( next_teaching_position + 1 ) % NUM_WAITING_CHAIRS;
+
+			sleep( help_time );
+
+			pthread_mutex_unlock( &mutex_thread );
+			sem_post( &sem_ta );
+
+		}
+		//if no students are waiting
+		else {
+
+			if ( ta_sleeping_flag == 0 ) {
+
+				printf( "No students waiting. Sleeping.\n" );
+				ta_sleeping_flag = 1;
+
+			}
+
+		}
+
+	}
+
+}
