@@ -51,3 +51,11 @@ int main( int argc, char **argv ){
 		student_ids[i] = i + 1;
 		pthread_create( &students[i], NULL, student_actions, (void*) &student_ids[i] );
 	}
+	pthread_join(ta, NULL);
+	for( i =0; i < student_num; i++ )
+	{
+		pthread_join( students[i],NULL );
+	}
+
+	return 0;
+}
