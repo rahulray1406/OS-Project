@@ -102,3 +102,66 @@ void* ta_actions() {
 	}
 
 }
+void* student_actions( void* student_id ) {
+
+	int id_student = *(int*)student_id;
+
+	while( 1 ) {
+
+		//if student is waiting, continue waiting
+		if ( isWaiting( id_student ) == 1 ) { continue; }
+
+		//student is programming.
+		int time = rand() % 5;
+		printf( "\tStudent %d is programming for %d seconds.\n", id_student, time );
+		sleep( time );
+
+		pthread_mutex_lock( &mutex_thread );
+
+		if( number_students_waiting < NUM_WAITING_CHAIRS ) {
+
+			waiting_room_chairs[next_seating_position] = id_student;
+			number_students_waiting++;
+
+			//student takes a seat in the hallway.
+			printf( "\t\tStudent %d takes a seat. Students waiting = %d.\n", id_student, number_students_waiting );
+			next_seating_position = ( next_seating_position + 1 ) % NUM_WAITING_CHAIRS;
+
+			pthread_mutex_unlock( &mutex_thread );
+
+			//wake TA if sleeping
+			sem_post( &sem_students );
+			sem_wait( &sem_ta );
+
+		}
+		else {
+
+			pthread_mutex_unlock( &mutex_thread );
+
+			//No chairs available. Student will try later.
+			printf( "\t\t\tStudent %d will try later.\n",id_student );
+
+		}
+
+	}
+
+}
+
+int isNumber(char number[])
+{
+    int i;
+		for ( i = 0 ; number[i] != 0; i++ )
+    {
+        if (!isdigit(number[i]))
+            return 0;
+    }
+    return 1;
+}
+
+int isWaiting( int student_id ) {
+	int i;
+	for ( i = 0; i < 3; i++ ) {
+		if ( waiting_room_chairs[i] == student_id ) { return 1; }
+	}
+	return 0;
+}
