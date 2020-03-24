@@ -108,10 +108,10 @@ void* student_actions( void* student_id ) {
 
 	while( 1 ) {
 
-		//if student is waiting, continue waiting
+		
 		if ( isWaiting( id_student ) == 1 ) { continue; }
 
-		//student is programming.
+		
 		int time = rand() % 5;
 		printf( "\tStudent %d is programming for %d seconds.\n", id_student, time );
 		sleep( time );
@@ -123,13 +123,13 @@ void* student_actions( void* student_id ) {
 			waiting_room_chairs[next_seating_position] = id_student;
 			number_students_waiting++;
 
-			//student takes a seat in the hallway.
+			
 			printf( "\t\tStudent %d takes a seat. Students waiting = %d.\n", id_student, number_students_waiting );
 			next_seating_position = ( next_seating_position + 1 ) % NUM_WAITING_CHAIRS;
 
 			pthread_mutex_unlock( &mutex_thread );
 
-			//wake TA if sleeping
+			
 			sem_post( &sem_students );
 			sem_wait( &sem_ta );
 
@@ -138,7 +138,7 @@ void* student_actions( void* student_id ) {
 
 			pthread_mutex_unlock( &mutex_thread );
 
-			//No chairs available. Student will try later.
+			
 			printf( "\t\t\tStudent %d will try later.\n",id_student );
 
 		}
